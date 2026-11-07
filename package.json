@@ -1,0 +1,13 @@
+{
+  "name": "zvyahel-svitlo",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "schedule": "node scraper/schedule.mjs",
+    "addresses": "node scraper/addresses.mjs",
+    "check": "node scripts/check-widget.mjs"
+  }
+}

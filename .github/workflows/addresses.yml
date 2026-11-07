@@ -1,0 +1,33 @@
+name: Update addresses
+
+on:
+  schedule:
+    - cron: "30 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run addresses
+      - name: Commit if changed
+        run: |
+          git diff --quiet -- data/addresses.json && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/addresses.json
+          git commit -m "data: addresses $(TZ=Europe/Kyiv date +'%Y-%m-%d')"
+          git pull --rebase
+          git push
